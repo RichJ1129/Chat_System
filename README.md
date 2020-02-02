@@ -1,4 +1,4 @@
-# Chat_System
+# Simple Chat System
 #### Created by Richard Joseph
 #### Status: In-Progress
 #### Languages: C++ Chat Server and Python Chat Client
