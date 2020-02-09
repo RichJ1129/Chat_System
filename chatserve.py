@@ -2,12 +2,12 @@ import socket
 import sys
 import os
 
+
 def check_startup():
     if len(sys.argv) < 2:
         print("Format of input should be:")
         print("python3 chatserve.py <port>")
         quit(0)
-
 
 
 def choose_handle():
@@ -40,28 +40,28 @@ def send_msg(conn, handle):
 
 
 def main():
-    # check_startup()
+    check_startup()
     handle = choose_handle()
     new_server = start_server()
 
     online = True
+    conn = None
 
-    while 1:
+    while online:
         os.system('clear')
         print("Awaiting message from the client")
-        waiting = True
-        conn, addr = new_server.accept()
+        conn = new_server.accept()
         while 1:
             received = receive_msg(conn)
-            # if "\quit" in received:
-            #     break
-            # if waiting:
-            #     os.system('clear')
-            #     print("-Messages-")
-            # waiting = False
-            print(received)
+            if "/quit" in str(received):
+                online = False
+                break
+            new_message = str(received)
+            print(new_message[2:-1])
             sent = send_msg(conn, handle)
-            if "\quit" in sent:
+            if "/quit" in sent:
+                print("You have now exited the program")
+                online = False
                 break
     conn.close()
 

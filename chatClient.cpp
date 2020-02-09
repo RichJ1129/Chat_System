@@ -20,8 +20,8 @@ int n;
 struct sockaddr_in serv_addr;
 //Defines a host computer on the Internet
 struct hostent *server;
-char buffer[500];
-char message[500];
+char buffer[501];
+char message[489];
 char userHandle[11];
 bool online = true;
 
@@ -81,23 +81,21 @@ void sendMsg(char *handle) {
     // presents the user's handle and waits for message
 
     printf("%s: ",userHandle);
-    bzero(buffer,500);
-    fgets(buffer,499,stdin);
+    bzero(buffer, sizeof(buffer));
+    fgets(buffer,488,stdin);
 
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < 489; i++) {
         if (buffer[i] == '\n') {
             buffer[i] = '\0';
         }
     }
 
-    // checks if the user typed "\quit"
-    if (buffer[0] == '\\' && buffer[1] == 'q' && buffer[2] == 'u' && buffer[3] == 'i' && buffer[4] == 't') {
+    // checks if the user typed "/quit"
+    if (buffer[0] == '/' && buffer[1] == 'q' && buffer[2] == 'u' && buffer[3] == 'i' && buffer[4] == 't') {
         online = false;
 
-        // send "\quit" to the server
         n = write(sockfd,buffer,strlen(buffer));
 
-        // check if the write was successful
         if (n < 0) {
             error("ERROR writing to socket");
         }
@@ -105,18 +103,19 @@ void sendMsg(char *handle) {
         // close the connection
         close(sockfd);
     }
+
     else {
         // clear the message array
-        bzero(message,501);
+        bzero(message, sizeof(message));
 
         // put the user handle in it
-        strcat(message,handle);
+        strcat(message, handle);
 
         // put the colon and space init
         strcat(message,": ");
 
         // put the user's message
-        strcat(message,buffer);
+        strcat(message, buffer);
 
 
         // write the entire message to the server
@@ -132,7 +131,7 @@ void sendMsg(char *handle) {
 
 void receiveMsg() {
     // clear the message array
-    bzero(message,501);
+    bzero(message, sizeof(message));
 
     // read from the server
     n = read(sockfd,message,500);
@@ -165,7 +164,7 @@ void receiveMsg() {
 int main(int argc, char *argv[]) {
     checkStart(argc, argv);
 
-    bzero(userHandle, 10);
+    bzero(userHandle, sizeof(userHandle));
     printf("Choose user handle:");
     fgets(userHandle, 10, stdin);
 
