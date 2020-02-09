@@ -10,10 +10,12 @@ def check_startup():
 
 
 def choose_handle():
-    handle = input("What would you like your username to be (Limit 11 Characters):")
+    handle = input("What would you like your username to be (Limit 10 Characters):")
 
-    while len(handle) > 11:
-        handle = input("Please choose a handle that is less than 11 characters:")
+    while len(handle) > 10:
+        handle = input("Please choose a handle that is less than 10 characters:")
+
+    print("Your handle is:", handle)
 
     return handle
 
@@ -30,14 +32,15 @@ def receive_msg(msg):
     return msg.recv(256)
 
 
-def send_msg(msg):
-    user_msg = input("User1: ")
-    msg.send("User1: " + user_msg)
+def send_msg(msg, handle):
+    user_msg = input(handle + ": ")
+    msg.send(handle, ":", user_msg)
     return user_msg
 
 
 def main():
     check_startup()
+    handle = choose_handle()
     new_server = start_server()
 
     online = True
@@ -56,7 +59,7 @@ def main():
                 print("-Messages-")
             waiting = False
             print(received)
-            sent = send_msg(conn)
+            sent = send_msg(conn, handle)
             if "\quit" in sent:
                 break
     conn.close()
@@ -78,11 +81,6 @@ def main():
     #     print("received data:", data)
     #     conn.send(data)  # echo
     # conn.close()
-
-
-
-
-
 
 if __name__ == '__main__':
     main()
