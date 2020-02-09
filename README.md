@@ -1,7 +1,11 @@
-# Simple Chat System
+## Simple Chat System
 #### Created by Richard Joseph
 #### Status: In-Progress
 #### Languages: C++ Chat Server and Python Chat Client
+> #### Sources: 
+> - http://www.linuxhowtos.org/C_C++/socket.htm 
+> - https://docs.python.org/3.8/howto/sockets.html
+#### Description     
 * Simple chat system that works for a pair of users.
 * Program able to send messages of up to 500 characters.
 
