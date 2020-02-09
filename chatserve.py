@@ -12,7 +12,7 @@ def check_startup():
 def choose_handle():
     handle = input("What would you like your username to be (Limit 10 Characters):")
 
-    while len(handle) > 10:
+    while len(handle) > 11:
         handle = input("Please choose a handle that is less than 10 characters:")
 
     print("Your handle is:", handle)

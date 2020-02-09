@@ -20,12 +20,22 @@ struct sockaddr_in serv_addr;
 struct hostent *server;
 char buffer[500];
 char message[500];
-char userHandle[10];
-
+char userHandle[11];
+bool online = true;
 
 void error(char *msg) {
     perror(msg);
     exit(0);
+}
+
+void checkStart(int c, char *v[]){
+
+    if (c < 3) {
+        fprintf(stderr, "usage %s hostname port \n", v[0]);
+        exit(0);
+    }
+
+
 }
 
 void initiate(char *hostName, int portNum) {
@@ -61,29 +71,44 @@ void receiveMsg() {
 }
 
 int main(int argc, char *argv[]) {
+    checkStart(argc, argv);
 
-    if (argc < 3) {
-        fprintf(stderr, "usage %s hostname port \n", argv[0]);
-        exit(0);
+    bzero(userHandle, 10);
+    printf("Choose user handle:");
+    fgets(userHandle, 10, stdin);
+
+    for(int i = 0; i < 11; i++) {
+        if(userHandle[i] == '\n') {
+            userHandle[i] = '\0';
+        }
     }
 
-    system("CLS")
-
-
-
-    printf("Please enter the message: ");
-    bzero(buffer,256);
-    fgets(buffer,255,stdin);
-    n = write(sockfd,buffer,strlen(buffer));
-    if (n < 0)
-        error("ERROR writing to socket");
-    bzero(buffer,256);
-    n = read(sockfd,buffer,255);
-    if (n < 0)
-        error("ERROR reading from socket");
-    printf("%s\n",buffer);
-    close(sockfd);
+    initiate(argv[1], atoi(argv[2]));
+    system("CLS");
+    printf("-Messages_");
+    while (online == true) {
+        if (online == true) {
+            sendMsg();
+        }
+        if (online == true) {
+            receiveMsg();
+        }
+    }
     return 0;
+
+//    printf("Please enter the message: ");
+//    bzero(buffer,256);
+//    fgets(buffer,255,stdin);
+//    n = write(sockfd,buffer,strlen(buffer));
+//    if (n < 0)
+//        error("ERROR writing to socket");
+//    bzero(buffer,256);
+//    n = read(sockfd,buffer,255);
+//    if (n < 0)
+//        error("ERROR reading from socket");
+//    printf("%s\n",buffer);
+//    close(sockfd);
+//    return 0;
 }
 
 
