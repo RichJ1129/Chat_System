@@ -5,6 +5,7 @@
 > #### Sources: 
 > - http://www.linuxhowtos.org/C_C++/socket.htm 
 > - https://docs.python.org/3.8/howto/sockets.html
+> - https://wiki.python.org/moin/TcpCommunication
 #### Description     
 * Simple chat system that works for a pair of users.
 * Program able to send messages of up to 500 characters.
