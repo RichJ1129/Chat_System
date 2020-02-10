@@ -24,19 +24,18 @@ char message[489];
 char userHandle[11];
 bool online = true;
 
-void error(char *msg) {
-    perror(msg);
-    exit(0);
-}
-
 
 void checkStart(int c, char *v[]){
-
     if (c < 3) {
         fprintf(stderr, "usage %s hostname port \n", v[0]);
         exit(0);
     }
 }
+void error(char *msg) {
+    perror(msg);
+    exit(0);
+}
+
 
 void initiate(char *hostName, int portNum) {
     portNo = portNum;
@@ -61,6 +60,7 @@ void initiate(char *hostName, int portNum) {
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
         error("ERROR connecting");
 }
+
 
 void sendMsg(char *handle) {
     // presents the user's handle and waits for message
@@ -115,6 +115,7 @@ void sendMsg(char *handle) {
     }
 }
 
+
 void receiveMsg() {
     // clear the message array
     bzero(message, sizeof(message));
@@ -148,6 +149,7 @@ void receiveMsg() {
     }
 }
 
+
 int main(int argc, char *argv[]) {
     checkStart(argc, argv);
 
@@ -170,7 +172,6 @@ int main(int argc, char *argv[]) {
         receiveMsg();
     }
     return 0;
-
 }
 
 

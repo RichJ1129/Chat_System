@@ -29,8 +29,8 @@ def start_server():
     return user_socket
 
 
-def receive_msg(msg):
-    return msg.recv(256)
+def receive_msg(conn):
+    return conn.recv(256)
 
 
 def send_msg(conn, handle):
