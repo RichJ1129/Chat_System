@@ -160,16 +160,16 @@ int main(int argc, char *argv[]) {
     fgets(userHandle, 10, stdin);
 
 
-    for(int i = 0; i < 11; i++) {
-        if(userHandle[i] == '\n') {
-            userHandle[i] = '\0';
+    for(char & i : userHandle) {
+        if(i == '\n') {
+            i = '\0';
         }
     }
 
     initiate(argv[1], atoi(argv[2]));
     system("clear");
     printf("Messages\n");
-    while (online == true) {
+    while (online) {
         sendMsg(userHandle);
         receiveMsg();
     }

@@ -69,6 +69,7 @@ def send_msg(conn, handle):
     conn.send((handle + ": " + user_msg).encode())
     return user_msg
 
+
 def main():
     check_startup()
     handle = choose_handle()
