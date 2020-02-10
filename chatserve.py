@@ -23,7 +23,7 @@ limit of 10 characters can be entered.
 
 
 def choose_handle():
-    handle = input("What would you like your username to be (Limit 10 Characters):")
+    handle = input("What would you like your username to be (Limit 10 Characters)?")
 
     while len(handle) > 10:
         handle = input("Please choose a handle that is less than 10 characters:")

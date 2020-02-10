@@ -1,7 +1,3 @@
-//
-// Created by Richard Joseph on 2/2/20.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -13,7 +9,7 @@
 
 
 int sockfd;
-int portNo;
+int portNum;
 int n;
 // Will contain the address of the server to which we connect to
 struct sockaddr_in serv_addr;
@@ -25,20 +21,39 @@ char userHandle[11];
 bool online = true;
 
 
+/* Function
+ * Checks to see if the program has the correct amount of
+arguments when entered in the console. If it does not
+it will quit out of the program.*/
+
+
 void checkStart(int c, char *v[]){
     if (c < 3) {
         fprintf(stderr, "usage %s hostname port \n", v[0]);
         exit(0);
     }
 }
+
+
+/* Function
+ * Prints error message that is passed to it. Obtained
+ * from linux source in readme file.*/
+
+
 void error(char *msg) {
     perror(msg);
     exit(0);
 }
 
 
-void initiate(char *hostName, int portNum) {
-    portNo = portNum;
+/* Function
+ * Modularized version of code in linux source. Initiates connection
+ * to the server specified in your terminal command.
+ * */
+
+
+void initiate(char *hostName, int port) {
+    portNum = port;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd < 0) {
         error("Error no such host");
@@ -56,26 +71,30 @@ void initiate(char *hostName, int portNum) {
     bcopy((char *)server->h_addr,
           (char *)&serv_addr.sin_addr.s_addr,
           server->h_length);
-    serv_addr.sin_port = htons(portNo);
+    serv_addr.sin_port = htons(portNum);
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
         error("ERROR connecting");
 }
 
 
-void sendMsg(char *handle) {
-    // presents the user's handle and waits for message
+/* Function
+ * Function to allow the program to send bytes to
+ * the socket.*/
 
+
+void sendMsg(char *handle) {
     printf("%s: ",userHandle);
     bzero(buffer, sizeof(buffer));
     fgets(buffer,488,stdin);
 
-    for (int i = 0; i < 489; i++) {
-        if (buffer[i] == '\n') {
-            buffer[i] = '\0';
+    //Range based loop the removes null terminator from the userHandle
+    for(char & i : buffer) {
+        if (i == '\n') {
+            i = '\0';
         }
     }
 
-    // checks if the user typed "/quit"
+    //If statement seeing if first 5 values in the array are the /quit statement
     if (buffer[0] == '/' && buffer[1] == 'q' && buffer[2] == 'u' && buffer[3] == 'i' && buffer[4] == 't') {
         online = false;
 
@@ -84,31 +103,16 @@ void sendMsg(char *handle) {
         if (n < 0) {
             error("ERROR writing to socket");
         }
-
-        // close the connection
         close(sockfd);
         exit(0);
     }
 
     else {
-        // clear the message array
         bzero(message, sizeof(message));
-
-        // put the user handle in it
         strcat(message, handle);
-
-        // put the colon and space init
         strcat(message,": ");
-
-        // put the user's message
         strcat(message, buffer);
-
-
-        // write the entire message to the server
         n = write(sockfd,message,strlen(message));
-
-
-        // check if the write was successful
         if (n < 0) {
             error("ERROR writing to socket");
         }
@@ -116,37 +120,35 @@ void sendMsg(char *handle) {
 }
 
 
+/* Function
+ * Function to allow the program to read bytes from
+ * the socket.*/
+
+
 void receiveMsg() {
-    // clear the message array
+    // clears the message array
     bzero(message, sizeof(message));
 
-    // read from the server
+    // read message from the server
     n = read(sockfd,message,500);
 
-    // check if the read was successful
+    // checks to see if the read was successful
     if (n < 0) {
         error("ERROR reading from socket");
     }
+    //For loop that checks to see if /quit was received. If it has program is ended.
+    for(int i = 0; i < sizeof(message); i++) {
+        if (message[i] == '/' && message[i+1] == 'q' && message[i+2] == 'u' && message[i+3] == 'i' && message[i+4] == 't') {
+            online = false;
+            close(sockfd);
+            printf("The Chat server has closed goodbye.");
 
-    // check if the server sent "\quit"
-    if (message[6] == '\\' &&
-        message[7] == 'q' &&
-        message[8] == 'u' &&
-        message[9] == 'i' &&
-        message[10] == 't') {
-
-        // if so, end the while loop
-        online = 0;
-
-        // close the connection
-        close(sockfd);
-        exit(0);
+            exit(0);
+        }
     }
-    else {
 
-        // write the message from the server
-        printf("%s\n",message);
-    }
+
+    printf("%s\n",message);
 }
 
 
@@ -154,7 +156,7 @@ int main(int argc, char *argv[]) {
     checkStart(argc, argv);
 
     bzero(userHandle, sizeof(userHandle));
-    printf("Choose user handle:");
+    printf("What would you like your username to be (Limit 10 Characters)?");
     fgets(userHandle, 10, stdin);
 
 
@@ -166,7 +168,7 @@ int main(int argc, char *argv[]) {
 
     initiate(argv[1], atoi(argv[2]));
     system("clear");
-    printf("-Messages-\n");
+    printf("Messages\n");
     while (online == true) {
         sendMsg(userHandle);
         receiveMsg();
