@@ -43,26 +43,28 @@ def main():
     check_startup()
     handle = choose_handle()
     new_server = start_server()
-
     online = True
-    conn = None
+    conn_waiting = False
+    os.system('clear')
+    print("Waiting for a message from the client")
+    conn, addr = new_server.accept()
 
     while online:
-        os.system('clear')
-        print("Awaiting message from the client")
-        conn = new_server.accept()
-        while 1:
-            received = receive_msg(conn)
-            if "/quit" in str(received):
-                online = False
-                break
-            new_message = str(received)
-            print(new_message[2:-1])
-            sent = send_msg(conn, handle)
-            if "/quit" in sent:
-                print("You have now exited the program")
-                online = False
-                break
+        if conn_waiting:
+            conn, addr = new_server.accept()
+            conn_waiting = False
+        received = receive_msg(conn)
+        if "/quit" in str(received):
+            print("Waiting for a message from a new client")
+            conn_waiting = True
+            continue
+        new_message = str(received)
+        print(new_message[2:-1])
+        sent = send_msg(conn, handle)
+        if "/quit" in sent:
+            print("You have now exited the program")
+            online = False
+            break
     conn.close()
 
 

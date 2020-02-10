@@ -10,7 +10,6 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <zconf.h>
-typedef unsigned char BYTE;
 
 
 int sockfd;
@@ -37,20 +36,6 @@ void checkStart(int c, char *v[]){
         fprintf(stderr, "usage %s hostname port \n", v[0]);
         exit(0);
     }
-}
-
-
-void stringToByte(char* input, BYTE* output) {
-    int loop;
-    int i;
-
-    loop = 0;
-    i = 0;
-
-    while(input[loop] != '\0'){
-        output[i++] = input[loop++];
-    }
-
 }
 
 void initiate(char *hostName, int portNum) {
@@ -102,6 +87,7 @@ void sendMsg(char *handle) {
 
         // close the connection
         close(sockfd);
+        exit(0);
     }
 
     else {
@@ -153,6 +139,7 @@ void receiveMsg() {
 
         // close the connection
         close(sockfd);
+        exit(0);
     }
     else {
 
