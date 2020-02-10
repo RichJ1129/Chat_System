@@ -2,6 +2,12 @@ import socket
 import sys
 import os
 
+"""Function
+Checks to see if the program has the correct amount of
+parameters when entered in the console. If it does not
+it will quit out of the program.
+"""
+
 
 def check_startup():
     if len(sys.argv) < 2:
@@ -10,15 +16,27 @@ def check_startup():
         quit(0)
 
 
+"""Function
+Allows user to select the handle they would like to be known as,
+limit of 10 characters can be entered. 
+"""
+
+
 def choose_handle():
     handle = input("What would you like your username to be (Limit 10 Characters):")
 
-    while len(handle) > 11:
+    while len(handle) > 10:
         handle = input("Please choose a handle that is less than 10 characters:")
 
     print("Your handle is:", handle)
 
     return handle
+
+
+"""Function
+Starts the server. Code taken and modularized 
+from CS 372 Lecture 15.
+"""
 
 
 def start_server():
@@ -29,15 +47,27 @@ def start_server():
     return user_socket
 
 
+"""Function
+Function to allow the program to read bytes from
+the socket.
+"""
+
+
 def receive_msg(conn):
-    return conn.recv(256)
+    return conn.recv(1024)
+
+
+"""Function
+FUnction to send bytes to the socket to 
+relay message to host B.
+"""
 
 
 def send_msg(conn, handle):
     user_msg = input(handle + ": ")
+# Encoded version of string above will be sent. Encodes to 'UTF-8'
     conn.send((handle + ": " + user_msg).encode())
     return user_msg
-
 
 def main():
     check_startup()
@@ -70,3 +100,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
