@@ -1,6 +1,6 @@
 ## Simple Chat System
 #### Created by Richard Joseph
-#### Status: In-Progress
+#### Status: Functional
 #### Languages: C++ Chat Server and Python Chat Client
 > #### Sources: 
 > - http://www.linuxhowtos.org/C_C++/socket.htm 
